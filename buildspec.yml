@@ -1,14 +1,36 @@
 version: 0.2
 
+
 phases:
+  pre_build:
+    commands:
+      - mvn clean install
+      - echo Logging in to Amazon ECR...
+      - aws --version
+      - aws sts get-caller-identity
+      - export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s" \ $(aws sts assume-role \ --role-arn arn:aws:iam::872583825157:role/AdminCLI \ --role-session-name AdminCLI \ --query "Credentials.[AccessKeyId,SecretAccessKey,SessionToken]" \ --output text))
+      - aws sts get-caller-identity
+      - aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 872583825157.dkr.ecr.ap-southeast-1.amazonaws.com
+      - REPOSITORY_URI=872583825157.dkr.ecr.ap-southeast-1.amazonaws.com/nandosan-be
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=build-$(echo $CODEBUILD_BUILD_ID | awk -F":" '{print $2}')
   build:
     commands:
-      - echo Entered the build phase...
-      - mvn clean package
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t $REPOSITORY_URI:latest .
+      - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
-      - echo Build completed successfully
+      - echo Build completed on `date`
+      - echo Pushing the Docker images...
+      - docker push $REPOSITORY_URI:latest
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - echo Writing image definitions file...
+      - printf '[{"name":"order-service","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - cat imagedefinitions.json
 artifacts:
   files:
+    - imagedefinitions.json
     - target/order-service.jar
-  discard-paths: yes
+
