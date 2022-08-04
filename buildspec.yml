@@ -29,6 +29,8 @@ phases:
       - echo Writing image definitions file...
       - printf '[{"name":"order-service","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
       - cat imagedefinitions.json
+      - aws eks update-kubeconfig --name bc-mgmt --region ap-southeast-1
+      - kubectl apply -f simple-app-deployment.yaml
 artifacts:
   files:
     - imagedefinitions.json
