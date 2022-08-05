@@ -25,7 +25,7 @@ phases:
       - echo Pushing the Docker images...
       - AWS_ACCOUNT_ID=872583825157
       - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.ap-southeast-1.amazonaws.com/simpleapp-be
-      - service docker start
+      - sudo service docker start
       - docker push 872583825157.dkr.ecr.ap-southeast-1.amazonaws.com:latest
       - docker push 872583825157.dkr.ecr.ap-southeast-1.amazonaws.com:$IMAGE_TAG
       - echo Writing image definitions file...
