@@ -25,10 +25,10 @@ phases:
       - echo Pushing the Docker images...
       - AWS_ACCOUNT_ID=872583825157
       - REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.ap-southeast-1.amazonaws.com/simpleapp-be
-      - docker push $REPOSITORY_URI:latest
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - docker push 872583825157.dkr.ecr.ap-southeast-1.amazonaws.com:latest
+      - docker push 872583825157.dkr.ecr.ap-southeast-1.amazonaws.com:$IMAGE_TAG
       - echo Writing image definitions file...
-      - printf '[{"name":"order-service","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - printf '[{"name":"order-service","imageUri":"%s"}]' 872583825157.dkr.ecr.ap-southeast-1.amazonaws.com:$IMAGE_TAG > imagedefinitions.json
       - cat imagedefinitions.json
       - aws eks update-kubeconfig --name bc-mgmt --region ap-southeast-1
       - kubectl apply -f simple-app-deployment.yaml
