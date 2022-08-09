@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: container-simpleapp-be
-          image: 872583825157.dkr.ecr.ap-southeast-1.amazonaws.com/garuda-be:latest
+          image: 872583825157.dkr.ecr.ap-southeast-1.amazonaws.com/nandosan-test-2
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
