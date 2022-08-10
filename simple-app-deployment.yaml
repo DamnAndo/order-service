@@ -9,21 +9,21 @@ metadata:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: deployment-simpleapp-be
+  name: deployment-demoapp-be
   namespace: cdc-bootcamp
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: app-simpleapp-be
+      app: app-demoapp-be
   template:
     metadata:
       labels:
-        app: app-simpleapp-be
+        app: app-demoapp-be
     spec:
       containers:
-        - name: container-simpleapp-be
-          image: 872583825157.dkr.ecr.ap-southeast-1.amazonaws.com/nandosan-test-2
+        - name: container-demoapp-be
+          image: 872583825157.dkr.ecr.ap-southeast-1.amazonaws.com/demo-be
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -31,11 +31,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: service-simpleapp-be
+  name: service-demoapp-be
   namespace: cdc-bootcamp
 spec:
   selector:
-    app: app-simpleapp-be
+    app: app-demoapp-be
   ports:
     - port: 8080
       targetPort: 8080
